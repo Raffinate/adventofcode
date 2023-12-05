@@ -1,3 +1,7 @@
+pub struct AocFlags {
+    pub debug: bool,
+}
+
 pub trait AocTask {
-    fn solve(&self) -> String;
+    fn solve(&self, flags: AocFlags) -> String;
 }

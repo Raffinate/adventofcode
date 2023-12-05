@@ -1,8 +1,10 @@
+use crate::common::AocFlags;
+
 #[derive(Clone)]
 pub struct Day1Task1;
 
 impl crate::common::AocTask for Day1Task1 {
-    fn solve(&self) -> String {
+    fn solve(&self, _: AocFlags) -> String {
         let input = include_str! {"resources/day1task1.txt"};
 
         fn extract_digits(s: &str) -> Vec<char> {
