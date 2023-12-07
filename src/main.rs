@@ -41,6 +41,15 @@ fn main() {
             },
             Rc::new(aoc2023::day1task2::Day1Task2 {}),
         ),
+        (
+            CommandLineArgs {
+                year: 2023,
+                day: 2,
+                puzzle: 1,
+                debug: false,
+            },
+            Rc::new(aoc2023::day2task1::Day2Task1 {}),
+        ),
     ];
 
     let matcher: HashMap<CommandLineArgs, Rc<dyn AocTask>> = solutions.iter().cloned().collect();
@@ -54,7 +63,13 @@ fn main() {
                 puzzle: cli.puzzle,
                 debug: false,
             })
-            .unwrap()
+            .expect(
+                format!(
+                    "No implementation registered for {}-{}-{}",
+                    cli.year, cli.day, cli.puzzle
+                )
+                .as_str()
+            )
             .solve(AocFlags { debug: cli.debug })
     );
 }
