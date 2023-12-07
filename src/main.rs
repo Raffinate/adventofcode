@@ -50,6 +50,15 @@ fn main() {
             },
             Rc::new(aoc2023::day2task1::Day2Task1 {}),
         ),
+        (
+            CommandLineArgs {
+                year: 2023,
+                day: 2,
+                puzzle: 2,
+                debug: false,
+            },
+            Rc::new(aoc2023::day2task2::Day2Task2 {}),
+        ),
     ];
 
     let matcher: HashMap<CommandLineArgs, Rc<dyn AocTask>> = solutions.iter().cloned().collect();

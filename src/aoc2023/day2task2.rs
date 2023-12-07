@@ -1,13 +1,14 @@
+use std::cmp::max;
 
 use crate::common::AocFlags;
 
 #[derive(Clone)]
-pub struct Day2Task1;
+pub struct Day2Task2;
 
-impl crate::common::AocTask for Day2Task1 {
+impl crate::common::AocTask for Day2Task2 {
     fn solve(&self, _: AocFlags) -> String {
-        let input = include_str! {"resources/day2task1.txt"};
-        return Day2Task1::solve(input.to_owned());
+        let input = include_str! {"resources/day2task2.txt"};
+        return Day2Task2::solve(input.to_owned());
     }
 }
 
@@ -18,18 +19,28 @@ struct Color {
     blue: i32,
 }
 
-impl Day2Task1 {
+impl Day2Task2 {
     fn solve(input: String) -> String {
         let lines = input.lines();
 
         let id_sum = lines
             .into_iter()
-            .map(Day2Task1::parse_line_id_rgbs)
-            .filter(|s| {
-                s.1.iter()
-                    .all(|c| c.red <= 12 && c.green <= 13 && c.blue <= 14)
+            .map(Day2Task2::parse_line_id_rgbs)
+            .map(|s| {
+                s.1.iter().fold(
+                    Color {
+                        red: 0,
+                        green: 0,
+                        blue: 0,
+                    },
+                    |r, c| Color {
+                        red: max(r.red, c.red),
+                        green: max(r.green, c.green),
+                        blue: max(r.blue, c.blue),
+                    },
+                )
             })
-            .map(|s| s.0)
+            .map(|s| s.red * s.blue * s.green)
             .sum::<i32>();
 
         return format!("{}", id_sum);
@@ -45,7 +56,10 @@ impl Day2Task1 {
             .unwrap();
 
         let revealed_strs = base_split.next().unwrap().split(";").collect::<Vec<_>>();
-        let colors = revealed_strs.iter().map(|s| Day2Task1::parse_reveal(s)).collect::<Vec<_>>();
+        let colors = revealed_strs
+            .iter()
+            .map(|s| Day2Task2::parse_reveal(s))
+            .collect::<Vec<_>>();
 
         return (game_id, colors);
     }
