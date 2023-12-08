@@ -19,46 +19,67 @@ struct CommandLineArgs {
     debug: bool,
 }
 
+// Given solution expression like
+// aoc2023::day1task1::Day1Task1 {}
+// will build CLI Args
+fn build_cli_args_by_struct_expression(s: &str) -> CommandLineArgs {
+    let mut split = s.split("::");
+    let year = split
+        .next()
+        .expect(
+            format!(
+                "Expected fully qualified path to solution class like aoc2023::..., but got {}",
+                s
+            )
+            .as_str(),
+        )
+        .replace("aoc", "")
+        .parse::<i32>()
+        .expect(format!("Crate name should look like aoc2023, but got {}", s).as_str());
+
+    let module = split.next()
+        .expect(format!("Expected fully qualified path to solution class like aoc2023::day1task1::..., but got {}", s).as_str());
+
+    let binding = module.replace("task", "::");
+    let mut day_puzzle_split = binding.split("::");
+    let day = day_puzzle_split
+        .next()
+        .unwrap()
+        .replace("day", "")
+        .parse::<i32>()
+        .expect(format!("Module name should look like dayXtaskX, but got {}", s).as_str());
+
+    let puzzle = day_puzzle_split
+        .next()
+        .expect(format!("Module name should look like dayXtaskX, but got {}", s).as_str())
+        .parse::<i32>()
+        .expect(format!("Module name should look like dayXtaskX, but got {}", s).as_str());
+
+    return CommandLineArgs {
+        year: year,
+        day: day,
+        puzzle: puzzle,
+        debug: false,
+    };
+}
+
+macro_rules! aoc_task {
+    ($s:expr) => {{
+        (
+            build_cli_args_by_struct_expression(stringify!($s)),
+            Rc::new($s),
+        )
+    }};
+}
+
 fn main() {
     let cli = CommandLineArgs::parse();
 
     let solutions: Vec<(CommandLineArgs, Rc<dyn AocTask>)> = vec![
-        (
-            CommandLineArgs {
-                year: 2023,
-                day: 1,
-                puzzle: 1,
-                debug: false,
-            },
-            Rc::new(aoc2023::day1task1::Day1Task1 {}),
-        ),
-        (
-            CommandLineArgs {
-                year: 2023,
-                day: 1,
-                puzzle: 2,
-                debug: false,
-            },
-            Rc::new(aoc2023::day1task2::Day1Task2 {}),
-        ),
-        (
-            CommandLineArgs {
-                year: 2023,
-                day: 2,
-                puzzle: 1,
-                debug: false,
-            },
-            Rc::new(aoc2023::day2task1::Day2Task1 {}),
-        ),
-        (
-            CommandLineArgs {
-                year: 2023,
-                day: 2,
-                puzzle: 2,
-                debug: false,
-            },
-            Rc::new(aoc2023::day2task2::Day2Task2 {}),
-        ),
+        aoc_task!(aoc2023::day1task1::Day1Task1 {}),
+        aoc_task!(aoc2023::day1task2::Day1Task2 {}),
+        aoc_task!(aoc2023::day2task1::Day2Task1 {}),
+        aoc_task!(aoc2023::day2task2::Day2Task2 {}),
     ];
 
     let matcher: HashMap<CommandLineArgs, Rc<dyn AocTask>> = solutions.iter().cloned().collect();
