@@ -89,6 +89,7 @@ fn main() {
         aoc_task!(aoc2023::day2task2::Day2Task2 {}),
         aoc_task!(aoc2023::day3task1::Day3Task1 {}),
         aoc_task!(aoc2023::day3task2::Day3Task2 {}),
+        aoc_task!(aoc2023::day4task1::Day4Task1 {}),
     ];
 
     let matcher: HashMap<String, Rc<dyn AocTask>> = solutions.iter().cloned().collect();
