@@ -5,3 +5,4 @@ pub mod day2task2;
 pub mod day3task1;
 pub mod day3task2;
 pub mod day4task1;
+pub mod day4task2;
