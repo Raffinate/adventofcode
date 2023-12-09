@@ -17,6 +17,8 @@ struct CommandLineArgs {
     puzzle: i32,
     #[arg(default_value = "false", long)]
     debug: bool,
+    #[arg(default_value = "default", long, short)]
+    algorithm: String,
 }
 
 // Given solution expression like
@@ -60,6 +62,7 @@ fn build_cli_args_by_struct_expression(s: &str) -> CommandLineArgs {
         day: day,
         puzzle: puzzle,
         debug: false,
+        algorithm: "default".to_owned(),
     };
 }
 
@@ -80,6 +83,7 @@ fn main() {
         aoc_task!(aoc2023::day1task2::Day1Task2 {}),
         aoc_task!(aoc2023::day2task1::Day2Task1 {}),
         aoc_task!(aoc2023::day2task2::Day2Task2 {}),
+        aoc_task!(aoc2023::day3task1::Day3Task1 {}),
     ];
 
     let matcher: HashMap<CommandLineArgs, Rc<dyn AocTask>> = solutions.iter().cloned().collect();
@@ -92,6 +96,7 @@ fn main() {
                 day: cli.day,
                 puzzle: cli.puzzle,
                 debug: false,
+                algorithm: "default".to_owned(),
             })
             .expect(
                 format!(
@@ -100,6 +105,6 @@ fn main() {
                 )
                 .as_str()
             )
-            .solve(AocFlags { debug: cli.debug })
+            .solve(AocFlags { debug: cli.debug, algorithm: cli.algorithm})
     );
 }
