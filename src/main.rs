@@ -21,6 +21,10 @@ struct CommandLineArgs {
     algorithm: String,
 }
 
+fn solution_key(args: &CommandLineArgs) -> String {
+    return format!("{}::{}::{}", args.year, args.day, args.puzzle);
+}
+
 // Given solution expression like
 // aoc2023::day1task1::Day1Task1 {}
 // will build CLI Args
@@ -69,7 +73,7 @@ fn build_cli_args_by_struct_expression(s: &str) -> CommandLineArgs {
 macro_rules! aoc_task {
     ($s:expr) => {{
         (
-            build_cli_args_by_struct_expression(stringify!($s)),
+            solution_key(&build_cli_args_by_struct_expression(stringify!($s))),
             Rc::new($s),
         )
     }};
@@ -78,7 +82,7 @@ macro_rules! aoc_task {
 fn main() {
     let cli = CommandLineArgs::parse();
 
-    let solutions: Vec<(CommandLineArgs, Rc<dyn AocTask>)> = vec![
+    let solutions: Vec<(String, Rc<dyn AocTask>)> = vec![
         aoc_task!(aoc2023::day1task1::Day1Task1 {}),
         aoc_task!(aoc2023::day1task2::Day1Task2 {}),
         aoc_task!(aoc2023::day2task1::Day2Task1 {}),
@@ -87,18 +91,12 @@ fn main() {
         aoc_task!(aoc2023::day3task2::Day3Task2 {}),
     ];
 
-    let matcher: HashMap<CommandLineArgs, Rc<dyn AocTask>> = solutions.iter().cloned().collect();
+    let matcher: HashMap<String, Rc<dyn AocTask>> = solutions.iter().cloned().collect();
 
     println!(
         "{}",
         matcher
-            .get(&CommandLineArgs {
-                year: cli.year,
-                day: cli.day,
-                puzzle: cli.puzzle,
-                debug: false,
-                algorithm: "default".to_owned(),
-            })
+            .get(&solution_key(&cli))
             .expect(
                 format!(
                     "No implementation registered for {}-{}-{}",
