@@ -84,6 +84,7 @@ fn main() {
         aoc_task!(aoc2023::day2task1::Day2Task1 {}),
         aoc_task!(aoc2023::day2task2::Day2Task2 {}),
         aoc_task!(aoc2023::day3task1::Day3Task1 {}),
+        aoc_task!(aoc2023::day3task2::Day3Task2 {}),
     ];
 
     let matcher: HashMap<CommandLineArgs, Rc<dyn AocTask>> = solutions.iter().cloned().collect();
@@ -105,6 +106,9 @@ fn main() {
                 )
                 .as_str()
             )
-            .solve(AocFlags { debug: cli.debug, algorithm: cli.algorithm})
+            .solve(AocFlags {
+                debug: cli.debug,
+                algorithm: cli.algorithm
+            })
     );
 }
